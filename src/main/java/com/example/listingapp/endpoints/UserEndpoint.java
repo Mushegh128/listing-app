@@ -34,11 +34,10 @@ public class UserEndpoint {
 
     @PostMapping("/users")
     public ResponseEntity<User> addUser(@RequestBody User user) {
-        User newUser = userService.save(user);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(newUser);
+        return ResponseEntity.ok(userService.save(user));
     }
 
     @PutMapping("/users")

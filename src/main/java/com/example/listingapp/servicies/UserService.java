@@ -1,6 +1,8 @@
 package com.example.listingapp.servicies;
 
+import com.example.listingapp.model.Role;
 import com.example.listingapp.model.User;
+import com.example.listingapp.repositories.ListingRepository;
 import com.example.listingapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ListingRepository listingRepository;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -24,9 +27,6 @@ public class UserService {
     }
 
     public User save(User user) {
-        if (user == null) {
-            return null;
-        }
         Optional<User> byEmail = userRepository.findByEmail(user.getEmail());
         if (byEmail.isPresent()) {
             return null;
@@ -39,6 +39,9 @@ public class UserService {
         if (byId.isEmpty()) {
             return null;
         }
+        if (user.getRole() != Role.USER && user.getRole() != Role.ADMIN) {
+            user.setRole(byId.get().getRole());
+        }
         return userRepository.save(user);
     }
 
@@ -47,6 +50,7 @@ public class UserService {
         if (byId.isEmpty()) {
             return false;
         }
+        listingRepository.changeAllListingsUser(id, null);
         userRepository.deleteById(id);
         return true;
     }

@@ -38,6 +38,7 @@ public class CategoryEndpoint {
         if (category == null) {
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(categoryService.save(category));
     }
 
@@ -54,11 +55,9 @@ public class CategoryEndpoint {
 
     @DeleteMapping("/categories/{id}")
     public ResponseEntity deleteCategory(@PathVariable("id") int id) {
-        Optional<Category> byId = categoryService.findById(id);
-        if (byId.isEmpty()) {
-            return ResponseEntity.notFound().build();
+        if (categoryService.deleteById(id)) {
+            return ResponseEntity.noContent().build();
         }
-        categoryService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 }

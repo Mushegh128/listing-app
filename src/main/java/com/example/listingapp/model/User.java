@@ -22,12 +22,12 @@ public class User {
     private String name;
     private String surname;
     private String email;
-    private UUID password;
+    private String password;
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
     @JsonIgnore
-    public UUID getPassword() {
+    public String getPassword() {
         return password;
     }
 }

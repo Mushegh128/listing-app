@@ -14,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ListingService {
     private final ListingRepository listingRepository;
+    private final CategoryService categoryService;
 
     public List<Listing> findAll() {
         return listingRepository.findAll();
@@ -53,7 +54,25 @@ public class ListingService {
         if (byId.isEmpty()) {
             return false;
         }
+        Listing listing = byId.get();
+        listing.setUser(null);
+        listing.setCategory(null);
+        listingRepository.save(listing);
         listingRepository.deleteById(id);
         return true;
+    }
+
+    //unused
+    public void changeAllListingsCategory(Integer before, Integer after) {
+        if (after == null) {
+            listingRepository.changeAllListingsCategory(before, after);
+        } else {
+            Optional<Category> byId = categoryService.findById(after);
+            if (byId.isPresent()) {
+                listingRepository.changeAllListingsCategory(before, after);
+            } else {
+                return;
+            }
+        }
     }
 }
