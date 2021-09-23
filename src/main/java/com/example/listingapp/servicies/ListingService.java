@@ -5,11 +5,12 @@ import com.example.listingapp.model.Listing;
 import com.example.listingapp.model.User;
 import com.example.listingapp.repositories.ListingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ListingService {
@@ -43,6 +44,7 @@ public class ListingService {
     public boolean update(Listing listing) {
         Optional<Listing> byId = listingRepository.findById(listing.getId());
         if (byId.isEmpty()) {
+            log.info("don't update: wrong listing's ID");
             return false;
         }
         listingRepository.save(listing);
@@ -52,6 +54,7 @@ public class ListingService {
     public boolean deleteById(int id) {
         Optional<Listing> byId = listingRepository.findById(id);
         if (byId.isEmpty()) {
+            log.info("don't delete: wrong listing's ID");
             return false;
         }
         listingRepository.deleteById(id);

@@ -5,11 +5,12 @@ import com.example.listingapp.model.User;
 import com.example.listingapp.repositories.ListingRepository;
 import com.example.listingapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -30,6 +31,7 @@ public class UserService {
     public User save(User user) {
         Optional<User> byEmail = userRepository.findByEmail(user.getEmail());
         if (byEmail.isPresent()) {
+            log.info("User by email: " + user.getEmail() + " don't saved, because it repeating");
             return null;
         }
         return userRepository.save(user);
@@ -38,9 +40,11 @@ public class UserService {
     public User updateUser(User user) {
         Optional<User> byId = userRepository.findById(user.getId());
         if (byId.isEmpty()) {
+            log.info("Don't update: wrong ID");
             return null;
         }
         if (user.getRole() != Role.USER && user.getRole() != Role.ADMIN) {
+            log.info("wrong Role of update's User");
             user.setRole(byId.get().getRole());
         }
         return userRepository.save(user);
@@ -49,6 +53,7 @@ public class UserService {
     public boolean deleteById(int id) {
         Optional<User> byId = userRepository.findById(id);
         if (byId.isEmpty()) {
+            log.info("Don't delete: wrong ID");
             return false;
         }
         listingRepository.changeAllListingsUser(id, null);

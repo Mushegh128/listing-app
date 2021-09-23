@@ -4,12 +4,13 @@ import com.example.listingapp.model.Category;
 import com.example.listingapp.repositories.CategoryRepository;
 import com.example.listingapp.repositories.ListingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -36,6 +37,7 @@ public class CategoryService {
     public boolean deleteById(int id) {
         Optional<Category> byId = categoryRepository.findById(id);
         if (byId.isEmpty()) {
+            log.info("don't deleted: wrong category's ID");
             return false;
         }
         listingRepository.changeAllListingsCategory(byId.get().getId(), null);

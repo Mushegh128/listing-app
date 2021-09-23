@@ -23,7 +23,7 @@ spring:
 logging:
   file:
     path: E:/springProjects/rest/log
-    name: springdemo.log
+    name: listing-app.log
 
 
 site:
