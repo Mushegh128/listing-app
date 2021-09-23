@@ -5,7 +5,6 @@ import com.example.listingapp.model.User;
 import com.example.listingapp.repositories.ListingRepository;
 import com.example.listingapp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ListingRepository listingRepository;
-    private final PasswordEncoder passwordEncoder;
 
 
     public List<User> findAll() {
@@ -34,9 +32,6 @@ public class UserService {
         if (byEmail.isPresent()) {
             return null;
         }
-        if (user.getPassword() != null){
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
         return userRepository.save(user);
     }
 
@@ -47,9 +42,6 @@ public class UserService {
         }
         if (user.getRole() != Role.USER && user.getRole() != Role.ADMIN) {
             user.setRole(byId.get().getRole());
-        }
-        if (user.getPassword() != null){
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userRepository.save(user);
     }
