@@ -54,10 +54,6 @@ public class ListingService {
         if (byId.isEmpty()) {
             return false;
         }
-        Listing listing = byId.get();
-        listing.setUser(null);
-        listing.setCategory(null);
-        listingRepository.save(listing);
         listingRepository.deleteById(id);
         return true;
     }
