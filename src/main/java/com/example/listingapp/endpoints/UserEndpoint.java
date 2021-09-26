@@ -1,11 +1,15 @@
 package com.example.listingapp.endpoints;
 
+import com.example.listingapp.dto.UserDto;
+import com.example.listingapp.dto.UserSaveDto;
 import com.example.listingapp.model.User;
 import com.example.listingapp.servicies.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,38 +17,47 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserEndpoint {
     private final UserService userService;
+    private final ModelMapper mapper;
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> users() {
-        List<User> allUsers = userService.findAll();
+    public ResponseEntity<List<UserDto>> users() {
+        List<User> users = userService.findAll();
+        List<UserDto> allUsers = new LinkedList<>();
+        for (User user : users) {
+            UserDto userDto = mapper.map(user, UserDto.class);
+            allUsers.add(userDto);
+        }
+
         return ResponseEntity.ok(allUsers);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> user(@PathVariable("id") int id) {
+    public ResponseEntity<UserDto> user(@PathVariable("id") int id) {
         Optional<User> byId = userService.findById(id);
         if (byId.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(byId.get());
+        UserDto userDto = mapper.map(byId.get(), UserDto.class);
+        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-        User save = userService.save(user);
+    public ResponseEntity<UserDto> addUser(@RequestBody UserSaveDto userSaveDto) {
+
+        User save = userService.save(mapper.map(userSaveDto, User.class));
         if (save == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(save);
+        return ResponseEntity.ok(mapper.map(save, UserDto.class));
     }
 
-    @PutMapping("/users")
-    public ResponseEntity<User> changeUser(@RequestBody User user) {
-        User updatedUser = userService.updateUser(user);
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserDto> changeUser(@PathVariable("id") int id, @RequestBody UserSaveDto userSaveDto) {
+        User updatedUser = userService.updateUser(mapper.map(userSaveDto, User.class));
         if (updatedUser == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok(mapper.map(updatedUser, UserDto.class));
     }
 
     @DeleteMapping("/users/{id}")
