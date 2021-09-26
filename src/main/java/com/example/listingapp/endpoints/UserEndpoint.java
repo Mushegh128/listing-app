@@ -17,9 +17,6 @@ public class UserEndpoint {
     @GetMapping("/users")
     public ResponseEntity<List<User>> users() {
         List<User> allUsers = userService.findAll();
-        if (allUsers.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(allUsers);
     }
 
@@ -34,10 +31,11 @@ public class UserEndpoint {
 
     @PostMapping("/users")
     public ResponseEntity<User> addUser(@RequestBody User user) {
-        if (user == null) {
+        User save = userService.save(user);
+        if (save == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(userService.save(user));
+        return ResponseEntity.ok(save);
     }
 
     @PutMapping("/users")

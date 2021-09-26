@@ -18,9 +18,6 @@ public class CategoryEndpoint {
     @GetMapping("/categories")
     public ResponseEntity getCategories() {
         List<Category> allCategories = categoryService.findAll();
-        if (allCategories == null && allCategories.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(allCategories);
     }
 
@@ -35,10 +32,6 @@ public class CategoryEndpoint {
 
     @PostMapping("/categories")
     public ResponseEntity<Category> addCategory(@RequestBody Category category) {
-        if (category == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         return ResponseEntity.ok(categoryService.save(category));
     }
 

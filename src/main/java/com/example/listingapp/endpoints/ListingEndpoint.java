@@ -24,9 +24,6 @@ public class ListingEndpoint {
     @GetMapping("/listings")
     public ResponseEntity<List<Listing>> listings() {
         List<Listing> allListings = listingService.findAll();
-        if (allListings.isEmpty()) {
-            ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(allListings);
     }
 
@@ -37,9 +34,6 @@ public class ListingEndpoint {
             return ResponseEntity.notFound().build();
         }
         List<Listing> byUser = listingService.findByUser(userByEmail);
-        if (byUser == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(byUser);
     }
 
@@ -50,9 +44,6 @@ public class ListingEndpoint {
             return ResponseEntity.notFound().build();
         }
         List<Listing> allByCategory = listingService.findAllByCategory(byId.get());
-        if (allByCategory.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(allByCategory);
     }
 
@@ -67,9 +58,6 @@ public class ListingEndpoint {
 
     @PostMapping("/listings")
     public ResponseEntity<Listing> addListing(@RequestBody Listing listing) {
-        if (listing == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(listingService.save(listing));
     }
 
