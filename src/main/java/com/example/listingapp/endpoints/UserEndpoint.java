@@ -4,6 +4,7 @@ import com.example.listingapp.dto.UserDto;
 import com.example.listingapp.dto.UserSaveDto;
 import com.example.listingapp.model.User;
 import com.example.listingapp.servicies.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +62,7 @@ public class UserEndpoint {
     }
 
     @DeleteMapping("/users/{id}")
+    @ApiOperation(notes = "this is for deleting", value = "delete user by ID")
     public ResponseEntity deleteUser(@PathVariable("id") int id) {
         boolean isDeleted = userService.deleteById(id);
         if (isDeleted) {
